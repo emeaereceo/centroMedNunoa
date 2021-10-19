@@ -153,6 +153,6 @@ opciones.addEventListener('change', (e) => {
 	const lastReg = registros[seleccion][registros[seleccion].length - 1];
 	const allReg = registros[seleccion];
 	console.log(firstReg, lastReg);
-	console.log('*************************************');
+	console.log('************************************');
 	console.log(allReg);
 });
