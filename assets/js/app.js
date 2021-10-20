@@ -135,24 +135,47 @@ const registros = {
 	],
 };
 
-const primerRegistro = (reg) => {};
+const firstReg = (reg) => {
+	return registros[reg][0];
+};
 
-const ultimoRegistro = (reg) => {};
+const lastReg = (reg) => {
+	return registros[reg][registros[reg].length - 1];
+};
+
+const ordenAtencion = (first, last) => {
+	const oA = document.querySelector('#orden-atencion');
+	oA.innerHTML = `<p class="fs-5 fw-bold">Primera Atencion : ${first.nombre} - ${first.prevision} | Ultima Atencion : ${last.nombre} - ${last.prevision} </p>`;
+};
+
+const tabla = (x) => {
+	const tab = document.querySelector('#tabla-resultado');
+	const cabecera = (tab.innerHTML = `
+	<table class="table table-hover">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Rut</th>
+			<th scope="col">Paciente</th>
+			<th scope="col">Prevision</th>
+			<th scope="col">Especialista</th>
+			<th scope="col">Hora</th>
+		</tr>
+	</thead>`);
+};
 
 const opciones = document.querySelector('#seleccion-especialidad');
 for (const especialidad in registros) {
 	// console.log(especialidad);
-	opciones.innerHTML += `<option>${especialidad}</option>`;
+	opciones.innerHTML += `<option class="text-capitalize">${especialidad}</option>`;
 }
 
 opciones.addEventListener('change', (e) => {
 	const seleccion = e.target.value;
-	// const firstReg = registros[seleccion].shift();
-	// const lastReg = registros[seleccion].pop();
-	const firstReg = registros[seleccion][0];
-	const lastReg = registros[seleccion][registros[seleccion].length - 1];
 	const allReg = registros[seleccion];
-	console.log(firstReg, lastReg);
-	console.log('************************************');
 	console.log(allReg);
+	// console.log(firstReg(seleccion));
+	// console.log(lastReg(seleccion));
+	ordenAtencion(firstReg(seleccion), lastReg(seleccion));
+	tabla(seleccion);
 });
