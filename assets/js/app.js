@@ -1,5 +1,6 @@
 // console.log('Conectado...');
 
+// DECLARO LOS OBJETOS
 const registros = {
 	dental: [
 		{
@@ -135,47 +136,85 @@ const registros = {
 	],
 };
 
+// FUNCION PARA EL PRIMER REGISTRO
 const firstReg = (reg) => {
 	return registros[reg][0];
 };
-
+// FUNCION PARA EL ULTIMO REGISTRO
 const lastReg = (reg) => {
 	return registros[reg][registros[reg].length - 1];
 };
-
+// IMPRIMO POR PANTALLA LOS DATOS DEL PRIMER Y ULTIMO REGISTRO
 const ordenAtencion = (first, last) => {
 	const oA = document.querySelector('#orden-atencion');
 	oA.innerHTML = `<p class="fs-5 fw-bold">Primera Atencion : ${first.nombre} - ${first.prevision} | Ultima Atencion : ${last.nombre} - ${last.prevision} </p>`;
 };
-
+// GENERO LA TABLA PARA LOS REGISTROS
 const tabla = (x) => {
-	const tab = document.querySelector('#tabla-resultado');
-	const cabecera = (tab.innerHTML = `
-	<table class="table table-hover">
-	<thead>
+	const tabUbicacion = document.querySelector('#tabla-resultado');
+	const tab = document.createElement('table');
+	const tabHead = document.createElement('thead');
+	const tabBody = document.createElement('tbody');
+
+	// UBICACION EN EL HTML
+	tabUbicacion.appendChild(tab);
+	tab.id = 'tabla-detalle';
+	tab.className = 'table table-hover';
+	tab.appendChild(tabHead);
+
+	// CONTENIDO DE LA CABECERA
+	tabHead.innerHTML = `
+	<tr>
+		<th scope="col">#</th>
+		<th scope="col">Rut</th>
+		<th scope="col">Paciente</th>
+		<th scope="col">Prevision</th>
+		<th scope="col">Especialista</th>
+		<th scope="col">Hora</th>
+	</tr>`;
+
+	// CONSTRUYO EL DETALLE
+	let contador = 0;
+	registros[x].forEach((r) => {
+		contador++;
+		tabBody.innerHTML += `
 		<tr>
-			<th scope="col">#</th>
-			<th scope="col">Rut</th>
-			<th scope="col">Paciente</th>
-			<th scope="col">Prevision</th>
-			<th scope="col">Especialista</th>
-			<th scope="col">Hora</th>
-		</tr>
-	</thead>`);
+		<th scope="row">${contador}</th>
+		<td>${r.rut}</td>
+		<td>${r.nombre}</td>
+		<td>${r.prevision}</td>
+		<td>${r.especialista}</td>
+		<td>${r.hora}</td>
+		</tr>`;
+	});
+	tab.appendChild(tabBody);
 };
 
+// ESPECIALIDADES DISPONIBLES SEGUN MI OBJETO Y LAS IMPRIMO EN UN COMBOBOX
 const opciones = document.querySelector('#seleccion-especialidad');
 for (const especialidad in registros) {
 	// console.log(especialidad);
 	opciones.innerHTML += `<option class="text-capitalize">${especialidad}</option>`;
 }
 
+// POR CADA EVENTO DE "CHANGE" EN EL COMBOBOX ACTIVO LA CREACION DE DATOS SEGUN LA OPCION SELECCIONADA
 opciones.addEventListener('change', (e) => {
 	const seleccion = e.target.value;
 	const allReg = registros[seleccion];
 	console.log(allReg);
-	// console.log(firstReg(seleccion));
-	// console.log(lastReg(seleccion));
+
+	// PREVENGO LA SELECCION POR DEFECTO PARA QUE SOLO SE ACTIVE CON LAS ESPECIALIDADES VALIDAS
+	if (seleccion === 'Selecciona especialidad') {
+		return alert('Selecciona la especialidad que desea consultar');
+	}
+
+	// INCLUI ESTA CONDICIONAL YA QUE NO LIMPIABA / ACTUALIZABA MI TABLA AL CAMBIAR DE SELECCION
+	// ANTES DE EJECUTAR LA CREACION DE TABLA, ELIMINO SI EXISTE ALGUNA ANTERIOR
+	if (document.querySelector('#tabla-detalle')) {
+		document.querySelector('#tabla-detalle').remove();
+	}
+
+	// APLICO LAS FUNCIONES PARA IMPRIMIR EN PANTALLA
 	ordenAtencion(firstReg(seleccion), lastReg(seleccion));
 	tabla(seleccion);
 });
